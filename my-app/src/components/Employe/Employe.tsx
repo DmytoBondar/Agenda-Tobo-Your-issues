@@ -1,14 +1,33 @@
 import axios from 'axios'
-import React, { ChangeEvent, useState, useEffect } from 'react'
+import React, { ChangeEvent, useState, useEffect, DetailedHTMLProps, AnchorHTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
 
+interface iProps {
+    _id: string
+    name: string;
+    email: string
+    status: string
+    issues: string
+    assigne: string
+    salary: string
+    number: string
+}
+
+
 const Employe = () => {
-    const [formData, setFormData] = useState({})
-    const [data, setData] = useState([])
+    const [editBtn, setEditBtn] = useState<boolean>(false)
+    const [EditId, setEditId] = useState(null)
+    const [formData, setFormData] = useState({
+        name: '',
+        issues: '',
+        email: '',
+        number: '',
+    })
+    const [data, setData] = useState<iProps[]>([] as iProps[])
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         // let { name, value } = event.target;
-        setFormData({ ...data, [event.target.name]: event.target.value });
+        setFormData({ ...formData, [event.target.name]: event.target.value });
     }
 
     useEffect(() => {
@@ -26,7 +45,9 @@ const Employe = () => {
 
 
     const handleSubmit = (e: any) => {
+        setEditBtn(false)
         e.preventDefault();
+        console.log()
         axios.post("http://localhost:5050/add", formData)
             .then(res => {
                 console.log("okay", res)
@@ -34,6 +55,38 @@ const Employe = () => {
             .catch(res => {
                 console.log("error")
             })
+    }
+    const handleDelete = (id: any) => {
+        setEditBtn(false)
+        console.log(id)
+        axios.delete(`http://localhost:5050/delete/${id}`)
+            .then(res => {
+                console.log("delete")
+            })
+            .catch(err => {
+                console.log("error")
+            })
+    }
+    const handleClickEdit = (id: any) => {
+        setEditId(id)
+        setEditBtn(!editBtn)
+        const newForm = (data.find((item) => item._id === id))
+        if (newForm) {
+            setFormData({ ...formData, email: newForm.email, number: newForm.number, issues: newForm.issues, name: newForm.name });
+        }
+    }
+
+    const handleEditSubmit = () => {
+        if(EditId){
+            axios.patch(`http://localhost:5050/delete/${EditId}`, formData)
+            .then(res =>{
+                console.log("okay")
+            })
+            .catch(err =>{
+                console.log("error happend")
+            })
+
+        }
     }
 
     return (
@@ -68,29 +121,25 @@ const Employe = () => {
                             <form onSubmit={handleSubmit}>
                                 <h5 className="mb-3 ">Insert Employee Records</h5>
                                 <div className="form-group">
-                                    <input type="text" className="form-control  mb-4" name="name" onChange={handleChange} placeholder="Enter name" required />
+                                    <input type="text" className="form-control  mb-4" name="name" onChange={handleChange}
+                                     value={editBtn ? formData.name : ''}
+                                     placeholder="Enter name" required />
                                 </div>
 
                                 <div className="form-group">
-                                    <input type="text" className="form-control  mb-4" name="issues" onChange={handleChange} placeholder="Enter Sirname" required />
+                                    <input type="text" className="form-control  mb-4" name="issues" onChange={handleChange} value={editBtn ? formData.issues : ''} placeholder="Enter Sirname" required />
                                 </div>
 
                                 <div className="form-group">
-                                    <input type="text" className="form-control mb-4" name="email" onChange={handleChange} placeholder="Enter Email" required />
+                                    <input type="text" className="form-control mb-4" name="email" onChange={handleChange} value={editBtn ? formData.email : ''} placeholder="Enter Email" required />
                                 </div>
 
                                 <div className="form-group">
-                                    <input type="text" className="form-control mb-4" name="status" onChange={handleChange} placeholder="Enter Phone" required />
+                                    <input type="text" className="form-control mb-4" name="number" onChange={handleChange} value={editBtn ? formData.number : ''} placeholder="Enter Email" required />
                                 </div>
 
-                                <div className="form-group">
-                                    <input type="text" className="form-control mb-4" name="assigne" onChange={handleChange} placeholder="Enter Phone" required />
-                                </div>
-
-                                <div className="form-group">
-                                    <input type="text" className="form-control mb-2" name="salary" onChange={handleChange} placeholder="Enter Salary" required />
-                                </div>
                                 <button type="submit" className="btn btn-primary btn-block mt-4">Insert Record</button>
+                                {editBtn && <button type="submit" className="btn btn-primary btn-block mt-4" onClick={handleEditSubmit}>Updata Data</button>}
                             </form>
                         </div>
                     </div>
@@ -109,33 +158,25 @@ const Employe = () => {
                                 <tr>
                                     <th>Name</th>
                                     <th>Issue</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
 
-                                {data?.map((item:any, key:number)=> 
-                                <tr key={key + 1000}>
-                                    <td>{item.name}</td>
-                                    <td>{item.issues}</td>
-                                    <td>
-                                        <a className="text-danger mr-2"
-                                        // onClick={() => {
-                                        //   const confirmBox = window.confirm(
-                                        //     "Do you really want to delete "+ name.first_name
-                                        //   )
-                                        //   if (confirmBox === true) {
-                                        //     deleteRecord(name.id)
-                                        //   }
-                                        // }}
-                                        >Update <i className="far fa-trash-alt" style={{ fontSize: "18px", marginRight: "5px" }}></i> </a>
-
-                                        <Link className=" mr-2" to={''}>
-                                            <i className="fa fa-edit" aria-hidden="true"></i>
-                                        </Link>
-                                    </td>
-                                </tr>
-                             )}  
+                                {data?.map((item: any, key: number) =>
+                                    <tr key={key + 1000}>
+                                        <td>{item.name}</td>
+                                        <td>{item.issues}</td>
+                                        <td>
+                                            <a className="text-danger mr-2"
+                                                onClick={() => handleDelete(item._id)}
+                                            >Delete <i className="far fa-trash-alt" style={{ fontSize: "18px", marginRight: "5px" }}></i> </a>
+                                            <div className=" mr-2" >
+                                                <i className="fa fa-edit" aria-hidden="true" onClick={() => handleClickEdit(item._id)}>Edit</i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
