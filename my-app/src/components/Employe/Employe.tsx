@@ -49,34 +49,10 @@ const Employe = () => {
 
     return (
         <section>
-            <nav className="navbar navbar-expand-lg navbar-light bg-dark">
-                <div className="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul className="navbar-nav">
-                        <li className="nav-item active ">
-                            sssssssss
-                        </li>
-                        <li className="nav-item active">
-                            <a className="nav-link text-white" href="#">Home <span className="sr-only">(current)</span></a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-white" href="#">Detail</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-white" href="#">Address</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-white" href="#">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
             <div className="container">
                 <h4 className="mb-3 text-center mt-4">CRUD Operation in MERN</h4>
                 <div className="row mt-3">
-                    <Link to='/add'>
-                    <button className="btn btn-primary">ADD Issues</button>
-                    </Link>
+                    <Link to='/add'><button className="btn btn-primary">ADD New Issues</button></Link>
                     <div className="col-sm-8">
                         <h5 className="text-center  ml-4 mt-4  mb-5">View Records</h5>
                         <div className="input-group mb-4 mt-3">
@@ -119,7 +95,3 @@ const Employe = () => {
 }
 
 export default Employe
-function setUser(arg0: any) {
-    throw new Error('Function not implemented.');
-}
-
