@@ -9,6 +9,7 @@ import {
 import Navbar from './components/common/Navbar';
 import Home from './components/Home/Home';
 import Employe from './components/Employe/Employe';
+import EmployeEdit from './components/Employe/EmployeEdit';
 function App() {
   return (
     <Router>
@@ -17,6 +18,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/em" component={Employe} />
+          {/* <Route exact path="/edit/" component={EmployeEdit} /> */}
           {/* <Route exact path="/about" component={About} /> */}
           {/* <Route exact path="/contact" component={Contact} /> */}
           {/* <Route exact path="/users/add" component={AddUser} />
