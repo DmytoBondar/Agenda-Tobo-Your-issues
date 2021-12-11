@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 const instance = axios.create({
-    baseURL: 'http://localhost:5050',
+    baseURL: 'https://fierce-everglades-10478.herokuapp.com',
   timeout: 15000,
 })
 

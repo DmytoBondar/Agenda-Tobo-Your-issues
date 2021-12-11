@@ -71,7 +71,7 @@ const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number,
     const handleEditSubmit = (e: any) => {
         setSpinner(true)
         e.preventDefault()
-        axios.patch(`http://localhost:5050/update/${id}`, formData)
+        axios.patch(`https://fierce-everglades-10478.herokuapp.com/update/${id}`, formData)
             .then(res => {
                 setSpinner(false)
                 closeModal()

@@ -26,7 +26,7 @@ const Employe = () => {
     const [error, setError] = useState<string>('')
 
     const handleDelete = async (id: any) => {
-        await axios.delete(`http://localhost:5050/delete/${id}`)
+        await axios.delete(`https://fierce-everglades-10478.herokuapp.com/delete/${id}`)
             .then(res => {
                 handleClick()
                 setError("Successfully Delete")

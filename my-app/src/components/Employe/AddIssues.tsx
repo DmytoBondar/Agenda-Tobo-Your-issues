@@ -72,7 +72,7 @@ const AddIssues = () => {
     const handleSubmit = (e: any) => {
         setSpinner(true)
         e.preventDefault();
-        axios.post("http://localhost:5050/add", formData)
+        axios.post("https://fierce-everglades-10478.herokuapp.com/add", formData)
             .then(res => {
                 setSpinner(false)
                 handleClick()
