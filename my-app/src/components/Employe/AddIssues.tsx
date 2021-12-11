@@ -58,7 +58,7 @@ const AddIssues = () => {
         axios.post("http://localhost:5050/add", formData)
             .then(res => {
                 console.log("okay", res)
-                history.push('/em')
+                history.push('/')
             })
             .catch(res => {
                 console.log("error")

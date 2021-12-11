@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, {useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal';
 import EmployeEdit from './EmployeEdit';
@@ -19,8 +19,8 @@ interface iProps {
 const Employe = () => {
     const [data, setData] = useState<iProps[]>([] as iProps[])
     const [modalIsOpen, setIsOpen] = useState(false);
-    const openModal =()=> {setIsOpen(true)}
-    const closeModal =() => {setIsOpen(false)}
+    const openModal = () => { setIsOpen(true) }
+    const closeModal = () => { setIsOpen(false) }
 
     useEffect(() => {
         const getData = () => {
@@ -46,47 +46,46 @@ const Employe = () => {
             })
     }
 
-
     return (
         <section>
             <div className="container">
                 <h4 className="mb-3 text-center mt-4">CRUD Operation in MERN</h4>
                 <div className="row mt-3">
                     <Link to='/add'><button className="btn btn-primary">ADD New Issues</button></Link>
-                    <div className="col-sm-8">
-                        <h5 className="text-center  ml-4 mt-4  mb-5">View Records</h5>
-                        <div className="input-group mb-4 mt-3">
-                            <div className="form-outline">
-                                <input type="text" id="form1" className="form-control" placeholder="Search Employee Here" style={{ backgroundColor: "#ececec" }} />
+                    <div className="d-flex justify-content-center">
+                        <div className="col-sm-8 text-center">
+                            <div className="input-group mb-4 mt-3">
+                                <div className="form-outline">
+                                    <input type="text" id="form1" className="form-control" placeholder="Search Employee Here" style={{ backgroundColor: "#ececec" }} />
+                                </div>
                             </div>
-                        </div>
-                        <table className="table table-hover  table-striped table-bordered ml-4 ">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Issue</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                {data?.map((item: any, key: number) =>
-                                    <tr key={key + 1000}>
-                                        <td>{item.name}</td>
-                                        <td>{item.issues}</td>
-                                        <td>
-                                            <a className="text-danger mr-2"
-                                                onClick={() => handleDelete(item._id)}
-                                            >Delete <i className="far fa-trash-alt" style={{ fontSize: "18px", marginRight: "5px" }}></i> </a>
-                                            <div className=" mr-2" >
-                                                <button onClick={openModal} className="btn btn-primary">Edit</button>
-                                                <EmployeEdit modalIsOpen={modalIsOpen} closeModal={closeModal} id={item._id} number={item.number} name={item.name} issues={item.issues} email={item.email} />
-                                            </div>
-                                        </td>
+                            <table className="table table-hover  table-striped table-bordered ml-4 ">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Number</th>
+                                        <th>Isses</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+
+                                    {data?.map((item: any, key: number) =>
+                                        <tr key={key + 1000}>
+                                            <td>{item.name}</td>
+                                            <td>{item.email}</td>
+                                            <td>{item.number}</td>
+                                            <td>{item.issues}</td>
+                                            <td><a className="text-danger mr-2" onClick={() => handleDelete(item._id)}>Delete <i className="far fa-trash-alt" style={{ fontSize: "18px", marginRight: "5px" }}></i> </a>
+                                                <div className=" mr-2" ><button onClick={openModal} className="btn btn-primary">Edit</button>
+                                                    <EmployeEdit modalIsOpen={modalIsOpen} closeModal={closeModal} id={item._id} number={item.number} name={item.name} issues={item.issues} email={item.email} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
