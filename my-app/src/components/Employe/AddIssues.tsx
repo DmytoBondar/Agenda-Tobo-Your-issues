@@ -22,6 +22,8 @@ const AddIssues = () => {
     const [open, setOpen] = useState(false);
     const [inputs, setInputs] = useState({ name: false, issues: false, email: false, number: false });
     const [initView, setInitView] = useState({ name: true, email: true, issues: true, number: true });
+    const [disabledButton] = useState(true);
+    const [spinner, setSpinner] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         issues: '',
@@ -68,18 +70,21 @@ const AddIssues = () => {
     }
 
     const handleSubmit = (e: any) => {
+        setSpinner(true)
         e.preventDefault();
         axios.post("http://localhost:5050/add", formData)
             .then(res => {
+                setSpinner(false)
+                handleClick()
                 setError("Successfully Upadated")
                 setSeverity("success")
-                handleClick()
                 setOpen(true)
                 history.push('/')
             })
             .catch(res => {
+                setSpinner(false)
                 handleClick()
-                setError("Something went wrong !!")
+                setError("Something went wrong")
                 setSeverity("error")
                 setOpen(true)
             })
@@ -158,20 +163,27 @@ const AddIssues = () => {
 
                     <Box mt={2} display="flex" justifyContent="center" alignItems="center">
 
-                        <Button type="submit" variant="contained" color="primary">
-                            Update
+                    <Button type="submit" variant="contained" color="primary"
+                            style={disabledButton ? {} : { backgroundColor: "green" }}
+                            disabled={inputs.name && inputs.email && inputs.number && inputs.issues ? false : true}
+                        >
+                            {spinner ? "Loading..." : "Add Issues"}
                         </Button>
                     </Box>
                 </Box>
 
                 <Stack spacing={2} sx={{ width: '100%' }}>
-                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                             {error}
                         </Alert>
                     </Snackbar>
                 </Stack>
+
             </Box>
+
+
+
         </div>
     )
 }

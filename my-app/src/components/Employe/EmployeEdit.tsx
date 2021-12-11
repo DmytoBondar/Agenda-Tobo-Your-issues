@@ -1,35 +1,15 @@
+import { Box, Button, TextField, Typography } from '@material-ui/core';
 import axios from 'axios'
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { ChangeEvent, useState } from 'react'
 import Modal from 'react-modal';
-import { Box, Button, IconButton, Snackbar, TextField, Typography } from '@mui/material';
+import { IProps } from '../../type';
 
 
-interface iProps {
-    _id: string
-    name: string;
-    email: string
-    status: string
-    issues: string
-    assigne: string
-    salary: string
-    number: string
-}
-interface Props {
-    modalIsOpen: any;
-    closeModal: any;
-    name: string;
-    issues: string;
-    email: string;
-    id: string
-    number: string;
-
-}
-
-const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number }: Props) => {
+const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number, handleClick, setError, setSeverity, setOpen }: IProps) => {
     const [inputs, setInputs] = useState({ name: false, issues: false, email: false, number: false });
     const [initView, setInitView] = useState({ name: true, email: true, issues: true, number: true });
-    const [data, setData] = useState<iProps>({} as iProps)
+    const [disabledButton] = useState(true);
+    const [spinner, setSpinner] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         issues: '',
@@ -89,13 +69,24 @@ const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number 
 
 
     const handleEditSubmit = (e: any) => {
+        setSpinner(true)
         e.preventDefault()
         axios.patch(`http://localhost:5050/update/${id}`, formData)
             .then(res => {
+                setSpinner(false)
                 closeModal()
+                handleClick()
+                setError("succesfully Updated Agenda")
+                setSeverity("success")
+                setOpen(true)
             })
             .catch(err => {
-                console.log("error happend")
+                setSpinner(false)
+                closeModal()
+                handleClick()
+                setError("sorry, Something went wrong")
+                setSeverity("error")
+                setOpen(true)
             })
     }
 
@@ -170,10 +161,14 @@ const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number 
                     />
 
                     <Box mt={2} display="flex" justifyContent="center" alignItems="center">
-
-                        <Button type="submit" variant="contained" color="primary">
-                            Update
+                        <Button type="submit" variant="contained" color="primary"
+                            style={disabledButton ? {} : { backgroundColor: "green" }}
+                            disabled={inputs.name && inputs.email && inputs.number && inputs.issues ? false : true}
+                        >
+                            {spinner ? "Loading..." : "Update"}
                         </Button>
+
+
                     </Box>
                 </Box>
 

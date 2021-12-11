@@ -6,9 +6,9 @@ import useAsync from '../hooks/useAsync';
 import IssuesServices from '../services/IssuesServices';
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Preloader from '../common/Preloader';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -18,6 +18,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const Employe = () => {
+    const { data, isLoading } = useAsync(IssuesServices.getIssues);
     const [open, setOpen] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
     const openModal = () => { setIsOpen(true) }
@@ -41,7 +42,6 @@ const Employe = () => {
             })
     }
 
-    const { data, isLoading } = useAsync(IssuesServices.getIssues);
 
     const handleClick = () => {
         setOpen(true);
@@ -54,7 +54,6 @@ const Employe = () => {
     };
 
 
-
     return (
         <section>
             <div className="container">
@@ -62,12 +61,7 @@ const Employe = () => {
                 <div className="row mt-3">
                     <Link to='/add'><button className="btn btn-primary">ADD New Issues</button></Link>
                     <div className="d-flex justify-content-center">
-                        <div className="col-sm-8 text-center">
-                            <div className="input-group mb-4 mt-3">
-                                <div className="form-outline">
-                                    <input type="text" id="form1" className="form-control" placeholder="Search Employee Here" style={{ backgroundColor: "#ececec" }} />
-                                </div>
-                            </div>
+                        <div className="col-sm-8 text-center mt-2">
                             <table className="table table-hover  table-striped table-bordered ml-4 ">
                                 <thead>
                                     <tr>
@@ -79,7 +73,7 @@ const Employe = () => {
                                 </thead>
                                 <tbody>
                                     {
-                                        isLoading && <div>Loading...</div>
+                                        isLoading && <div><Preloader/></div>
                                     }
 
                                     {data?.map((item: any, key: number) =>
@@ -93,7 +87,9 @@ const Employe = () => {
                                                     <button onClick={() => handleDelete(item._id)} className="btn btn-danger">delete</button>
                                                 </div>
                                                 <div className=" mr-2" ><button onClick={openModal} className="btn btn-primary">Edit</button>
-                                                    <EmployeEdit modalIsOpen={modalIsOpen} closeModal={closeModal} id={item._id} number={item.number} name={item.name} issues={item.issues} email={item.email} />
+                                                    <EmployeEdit modalIsOpen={modalIsOpen} closeModal={closeModal} id={item._id} number={item.number} name={item.name} issues={item.issues} email={item.email}
+                                                        handleClick={handleClick} setError={setError} setSeverity={setSeverity} setOpen={setOpen}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>
@@ -104,7 +100,7 @@ const Employe = () => {
                     </div>
                 </div>
                 <Stack spacing={2} sx={{ width: '100%' }}>
-                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                             {error}
                         </Alert>
