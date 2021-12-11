@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { ChangeEvent, useState, useEffect, DetailedHTMLProps, AnchorHTMLAttributes } from 'react'
+import React, {useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal';
 import EmployeEdit from './EmployeEdit';
@@ -16,31 +16,11 @@ interface iProps {
     number: string
 }
 
-
 const Employe = () => {
-    const [editBtn, setEditBtn] = useState<boolean>(false)
-    const [EditId, setEditId] = useState(null)
-    const [formData, setFormData] = useState({
-        name: '',
-        issues: '',
-        email: '',
-        number: '',
-    })
     const [data, setData] = useState<iProps[]>([] as iProps[])
-
-    // const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    //     // let { name, value } = event.target;
-    //     setFormData({ ...formData, [event.target.name]: event.target.value });
-    // }
-
     const [modalIsOpen, setIsOpen] = useState(false);
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
+    const openModal =()=> {setIsOpen(true)}
+    const closeModal =() => {setIsOpen(false)}
 
     useEffect(() => {
         const getData = () => {
@@ -56,21 +36,7 @@ const Employe = () => {
     }, [])
 
 
-    // const handleSubmit = (e: any) => {
-    //     setEditBtn(false)
-    //     e.preventDefault();
-    //     console.log()
-    //     axios.post("http://localhost:5050/add", formData)
-    //         .then(res => {
-    //             console.log("okay", res)
-    //         })
-    //         .catch(res => {
-    //             console.log("error")
-    //         })
-    // }
     const handleDelete = (id: any) => {
-        setEditBtn(false)
-        console.log(id)
         axios.delete(`http://localhost:5050/delete/${id}`)
             .then(res => {
                 console.log("delete")
@@ -108,34 +74,9 @@ const Employe = () => {
             <div className="container">
                 <h4 className="mb-3 text-center mt-4">CRUD Operation in MERN</h4>
                 <div className="row mt-3">
-                    <button onClick={openModal} className="btn btn-primary">ADD Issues</button>
-                    <AddIssues modalIsOpen={modalIsOpen} closeModal={closeModal} />
-                    {/* <div className="col-sm-4">
-                        <div className="box p-3 mb-3 mt-5" style={{ border: "1px solid #d0d0d0" }}>
-                            <form onSubmit={handleSubmit}>
-                                <h5 className="mb-3 ">Insert Employee Records</h5>
-                                <div className="form-group">
-                                    <input type="text" className="form-control  mb-4" name="name" onChange={handleChange}
-                                     value={editBtn ? formData.name : ''}
-                                     placeholder="Enter name" required />
-                                </div>
-
-                                <div className="form-group">
-                                    <input type="text" className="form-control  mb-4" name="issues" onChange={handleChange} placeholder="Enter Sirname" required />
-                                </div>
-
-                                <div className="form-group">
-                                    <input type="text" className="form-control mb-4" name="email" onChange={handleChange} placeholder="Enter Email" required />
-                                </div>
-
-                                <div className="form-group">
-                                    <input type="text" className="form-control mb-4" name="number" onChange={handleChange} placeholder="Enter Email" required />
-                                </div>
-
-                                <button type="submit" className="btn btn-primary btn-block mt-4">Insert Record</button>
-                            </form>
-                        </div>
-                    </div> */}
+                    <Link to='/add'>
+                    <button className="btn btn-primary">ADD Issues</button>
+                    </Link>
                     <div className="col-sm-8">
                         <h5 className="text-center  ml-4 mt-4  mb-5">View Records</h5>
                         <div className="input-group mb-4 mt-3">

@@ -1,21 +1,11 @@
 import axios from 'axios'
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import Modal from 'react-modal';
-import { Box, Button, IconButton, Snackbar, TextField, Typography } from '@mui/material';
+import React, { ChangeEvent, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Box, Button, TextField, Typography } from '@mui/material';
 
-interface Props {
-    modalIsOpen: any;
-    closeModal: any;
-    // name: string;
-    // issues: string;
-    // email: string;
-    // id: string
-    // number:string;
 
-}
-
-const AddIssues = ({modalIsOpen, closeModal}:Props) => {
+const AddIssues = () => {
+    const history = useHistory();
     const [inputs, setInputs] = useState({ name: false, issues: false, email: false, number: false });
     const [initView, setInitView] = useState({ name: true, email: true, issues: true, number: true });
     const [formData, setFormData] = useState({
@@ -65,36 +55,19 @@ const AddIssues = ({modalIsOpen, closeModal}:Props) => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        console.log()
         axios.post("http://localhost:5050/add", formData)
             .then(res => {
                 console.log("okay", res)
+                history.push('/em')
             })
             .catch(res => {
                 console.log("error")
             })
     }
 
-
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)'
-        }
-    };
-    Modal.setAppElement('#root')
     return (
         <div>
-            <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-            contentLabel="Example Modal"
-        >
+           
             <Box >
                 <Box my={1} px={2}>
                     <Typography variant="h5">Sign Up</Typography>
@@ -164,7 +137,6 @@ const AddIssues = ({modalIsOpen, closeModal}:Props) => {
             </Box>
 
 
-        </Modal>
             
         </div>
     )

@@ -22,7 +22,7 @@ interface Props {
     issues: string;
     email: string;
     id: string
-    number:string;
+    number: string;
 
 }
 
@@ -89,12 +89,10 @@ const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number 
 
 
     const handleEditSubmit = (e: any) => {
-        console.log(formData)
         e.preventDefault()
-
         axios.patch(`http://localhost:5050/update/${id}`, formData)
             .then(res => {
-                console.log("okay")
+                closeModal()
             })
             .catch(err => {
                 console.log("error happend")
@@ -108,32 +106,6 @@ const EmployeEdit = ({ modalIsOpen, closeModal, name, issues, email, id, number 
             style={customStyles}
             contentLabel="Example Modal"
         >
-
-            {/* <div className="box p-3 mb-3 mt-5" style={{ border: "1px solid #d0d0d0" }}>
-                        <form onSubmit={handleEditSubmit}>
-                            <h5 className="mb-3 ">Insert Employee Records</h5>
-                            <div className="form-group">
-                                <input type="text" className="form-control  mb-4" name="name" onChange={handleChange}
-                                    defaultValue={name}
-                                    placeholder="Enter name" required />
-                            </div>
-
-                            <div className="form-group">
-                                <input type="text" className="form-control  mb-4" name="issues" onChange={handleChange} defaultValue={issues} placeholder="Enter Sirname" required />
-                            </div>
-                            <div className="form-group">
-                                <input type="text" className="form-control mb-4" name="email" onChange={handleChange} defaultValue={email} placeholder="Enter Email" required />
-                            </div>
-
-                            <div className="form-group">
-                                <input type="text" className="form-control mb-4" name="number" onChange={handleChange} placeholder="Enter Email" required />
-                            </div>
-
-                            <button type="submit" className="btn btn-primary btn-block mt-4">Update</button>
-                        </form>
-                    </div> */}
-
-
 
             <Box >
                 <Box my={1} px={2}>
