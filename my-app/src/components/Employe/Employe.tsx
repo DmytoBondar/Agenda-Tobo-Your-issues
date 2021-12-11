@@ -1,50 +1,59 @@
 import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Modal from 'react-modal';
 import EmployeEdit from './EmployeEdit';
-import AddIssues from './AddIssues';
+import useAsync from '../hooks/useAsync';
+import IssuesServices from '../services/IssuesServices';
+import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
-interface iProps {
-    _id: string
-    name: string;
-    email: string
-    status: string
-    issues: string
-    assigne: string
-    salary: string
-    number: string
-}
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Employe = () => {
-    const [data, setData] = useState<iProps[]>([] as iProps[])
+    const [open, setOpen] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
     const openModal = () => { setIsOpen(true) }
     const closeModal = () => { setIsOpen(false) }
+    const [severity, setSeverity] = useState<any>("error");
+    const [error, setError] = useState<string>('')
 
-    useEffect(() => {
-        const getData = () => {
-            axios("http://localhost:5050/agenda")
-                .then(res => {
-                    setData(res.data)
-                })
-                .catch((err) => {
-                    console.log("error")
-                })
-        }
-        getData()
-    }, [])
-
-
-    const handleDelete = (id: any) => {
-        axios.delete(`http://localhost:5050/delete/${id}`)
+    const handleDelete = async (id: any) => {
+        await axios.delete(`http://localhost:5050/delete/${id}`)
             .then(res => {
-                console.log("delete")
+                handleClick()
+                setError("Successfully Delete")
+                setSeverity("success")
+                setOpen(true)
             })
             .catch(err => {
-                console.log("error")
+                handleClick()
+                setError("Something went wrong")
+                setSeverity("error")
+                setOpen(true)
             })
     }
+
+    const { data, isLoading } = useAsync(IssuesServices.getIssues);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
+
 
     return (
         <section>
@@ -69,6 +78,9 @@ const Employe = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {
+                                        isLoading && <div>Loading...</div>
+                                    }
 
                                     {data?.map((item: any, key: number) =>
                                         <tr key={key + 1000}>
@@ -76,7 +88,10 @@ const Employe = () => {
                                             <td>{item.email}</td>
                                             <td>{item.number}</td>
                                             <td>{item.issues}</td>
-                                            <td><a className="text-danger mr-2" onClick={() => handleDelete(item._id)}>Delete <i className="far fa-trash-alt" style={{ fontSize: "18px", marginRight: "5px" }}></i> </a>
+                                            <td>
+                                                <div className=" mr-2" >
+                                                    <button onClick={() => handleDelete(item._id)} className="btn btn-danger">delete</button>
+                                                </div>
                                                 <div className=" mr-2" ><button onClick={openModal} className="btn btn-primary">Edit</button>
                                                     <EmployeEdit modalIsOpen={modalIsOpen} closeModal={closeModal} id={item._id} number={item.number} name={item.name} issues={item.issues} email={item.email} />
                                                 </div>
@@ -88,8 +103,16 @@ const Employe = () => {
                         </div>
                     </div>
                 </div>
+                <Stack spacing={2} sx={{ width: '100%' }}>
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+                            {error}
+                        </Alert>
+                    </Snackbar>
+                </Stack>
+
             </div>
-        </section>
+        </section >
     )
 }
 

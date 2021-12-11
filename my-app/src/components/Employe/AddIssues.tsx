@@ -1,11 +1,25 @@
 import axios from 'axios'
-import React, { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Box, Button, TextField, Typography } from '@mui/material';
+import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 
 const AddIssues = () => {
     const history = useHistory();
+    const [severity, setSeverity] = useState<any>("error");
+    const [error, setError] = useState<string>('')
+    const [open, setOpen] = useState(false);
     const [inputs, setInputs] = useState({ name: false, issues: false, email: false, number: false });
     const [initView, setInitView] = useState({ name: true, email: true, issues: true, number: true });
     const [formData, setFormData] = useState({
@@ -35,7 +49,7 @@ const AddIssues = () => {
                 }
                 break;
             case 'number':
-                let validNumber = value.length > 3 ? true : false
+                let validNumber = value.length > 5 ? true : false
                 setInitView(initView => ({ ...initView, [name]: false }))
                 setInputs(inputs => ({ ...inputs, [name]: validNumber }))
                 if (validNumber) {
@@ -57,17 +71,32 @@ const AddIssues = () => {
         e.preventDefault();
         axios.post("http://localhost:5050/add", formData)
             .then(res => {
-                console.log("okay", res)
+                setError("Successfully Upadated")
+                setSeverity("success")
+                handleClick()
+                setOpen(true)
                 history.push('/')
             })
             .catch(res => {
-                console.log("error")
+                handleClick()
+                setError("Something went wrong !!")
+                setSeverity("error")
+                setOpen(true)
             })
     }
+    const handleClick = () => {
+        setOpen(true);
+    };
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
 
     return (
         <div>
-           
+
             <Box >
                 <Box my={1} px={2}>
                     <Typography variant="h5">Sign Up</Typography>
@@ -112,6 +141,7 @@ const AddIssues = () => {
                         required
                     />
 
+
                     <TextField
                         fullWidth
                         error={inputs.issues ? false : !initView.issues}
@@ -134,10 +164,14 @@ const AddIssues = () => {
                     </Box>
                 </Box>
 
+                <Stack spacing={2} sx={{ width: '100%' }}>
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+                            {error}
+                        </Alert>
+                    </Snackbar>
+                </Stack>
             </Box>
-
-
-            
         </div>
     )
 }
