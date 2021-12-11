@@ -179,11 +179,7 @@ const AddIssues = () => {
                         </Alert>
                     </Snackbar>
                 </Stack>
-
             </Box>
-
-
-
         </div>
     )
 }

@@ -8,7 +8,6 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Preloader from '../common/Preloader';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -18,7 +17,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const Employe = () => {
-    const { data, isLoading } = useAsync(IssuesServices.getIssues);
+    const { data} = useAsync(IssuesServices.getIssues);
     const [open, setOpen] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
     const openModal = () => { setIsOpen(true) }
@@ -42,7 +41,6 @@ const Employe = () => {
             })
     }
 
-
     const handleClick = () => {
         setOpen(true);
     };
@@ -52,7 +50,6 @@ const Employe = () => {
         }
         setOpen(false);
     };
-
 
     return (
         <section>
@@ -72,28 +69,28 @@ const Employe = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {
-                                        isLoading && <div><Preloader/></div>
-                                    }
-
-                                    {data?.map((item: any, key: number) =>
-                                        <tr key={key + 1000}>
+                                    {data?.map((item: any) => (
+                                        <tr key={item._id}>
                                             <td>{item.name}</td>
                                             <td>{item.email}</td>
                                             <td>{item.number}</td>
                                             <td>{item.issues}</td>
                                             <td>
-                                                <div className=" mr-2" >
-                                                    <button onClick={() => handleDelete(item._id)} className="btn btn-danger">delete</button>
-                                                </div>
-                                                <div className=" mr-2" ><button onClick={openModal} className="btn btn-primary">Edit</button>
+
+                                                <div className='d-flex'>
+                                                    <button onClick={() => handleDelete(item._id)} className="btn btn-danger btn-sm me-2">delete</button>
+                                                    <button onClick={openModal} className="btn btn-primary btn-sm">Edit</button>
                                                     <EmployeEdit modalIsOpen={modalIsOpen} closeModal={closeModal} id={item._id} number={item.number} name={item.name} issues={item.issues} email={item.email}
                                                         handleClick={handleClick} setError={setError} setSeverity={setSeverity} setOpen={setOpen}
                                                     />
                                                 </div>
+
                                             </td>
                                         </tr>
-                                    )}
+                                    )
+                                    )
+
+                                    }
                                 </tbody>
                             </table>
                         </div>
